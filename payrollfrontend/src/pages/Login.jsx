@@ -42,8 +42,7 @@ const Login = () => {
     //THIS IS FOR BACKGROUND TAILWIND bg-[url('/src/assets/img/bg-light.png')] dark:bg-[url('/src/assets/img/bg-dark.png')]
   };
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-light dark:bg-dark
-       bg-cover bg-center transition-all duration-300">
+    <div className="min-h-screen flex items-center justify-center px-4 transition-all duration-300">
 
       <div className="bg-white dark:bg-gray-900 dark:text-white 
         p-8 rounded-2xl shadow-md w-full max-w-sm transition-all duration-300">

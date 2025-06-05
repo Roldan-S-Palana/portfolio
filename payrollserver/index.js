@@ -11,7 +11,12 @@ import connectToDatabase from './db/db.js'
 connectToDatabase();
 const app = express();
 
-app.use(cors());
+//app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173", // allow Vite frontend
+  credentials: true // allow cookies / auth headers
+}));
+
 app.use(express.json());
 app.use('/api/auth', authRouter)
 

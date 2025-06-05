@@ -1,25 +1,29 @@
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+const AdminDashboard = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
-import React from 'react';
-import { useAuth } from '../context/authContext';
+  useEffect(() => {
+    if (user === null) {
+      // Don't navigate yet, wait for verification to complete
+      return;
+    }
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
-function Dashboard() {
-  const { user, logout } = useAuth();
+  if (!user)
+    return (
+      <div className="p-4 text-gray-900 dark:text-gray-100">
+        Loading or unauthorized...
+      </div>
+    );
 
-  return (
-    <div>
-      {user ? (
-        <>
-          <h1>Welcome, {user.name}</h1>
-          <p>Your role: {user.role}</p>
-          <button onClick={logout}>Logout</button>
-        </>
-      ) : (
-        <p>Please login.</p>
-      )}
-    </div>
-  );
-}
+  return <div className="p-4 text-gray-900 dark:text-gray-100">AdminDashboard: {user.name}</div>;
+};
 
-export default Dashboard;
+export default AdminDashboard;

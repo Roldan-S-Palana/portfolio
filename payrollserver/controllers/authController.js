@@ -42,4 +42,8 @@ const login = async (req, res) => {
     return res.status(500).json({success: false, error: 'Server error'});
   }
 };
-export default login;
+
+const verify = (res, req) => {
+  return req.status(200).json({success: true, user: req.user})
+}
+export {login, verify};
