@@ -1,15 +1,25 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/authContext.jsx';
 import { useNavigate } from 'react-router-dom';
 
+
 const Login = () => {
   const [email,setEmail] = useState("");
   const [password,setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const {login} = useAuth();
+  const [ setError] = useState(null);
+  const {login, user, loading} = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && user) {
+      if (user.role === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/employee-dashboard");
+      }
+    }
+  }, [user, loading, navigate]);
   
   const handleSubmit = async (e) => {
     

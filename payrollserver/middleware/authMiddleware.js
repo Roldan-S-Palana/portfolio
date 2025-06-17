@@ -10,15 +10,14 @@ const verifyUser = async (req, res, next) => {
     if (!decoded) {
       return res.status(404).json({ success: false, error: "Token not valid" });
     }
-    const user = await User.findById({ _id: decoded, _id }).select("-password");
+    const user = await User.findById(decoded._id).select("-password");
     if (!user) {
       return res.status(404).json({ success: false, error: "User not found" });
     }
-    req.user = user
-    next()
+    req.user = user;
+    next();
   } catch (error) {
-          return res.status(404).json({ success: false, error: "Server error" });
-
+    return res.status(404).json({ success: false, error: "Server error" });
   }
 };
 

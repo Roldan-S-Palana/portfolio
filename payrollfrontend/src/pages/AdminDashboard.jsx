@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
+import AdminLayout from "../layouts/AdminLayout.jsx";
 
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -23,7 +24,42 @@ const AdminDashboard = () => {
       </div>
     );
 
-  return <div className="p-4 text-gray-900 dark:text-gray-100">AdminDashboard: {user.name}</div>;
+  return (
+    <AdminLayout>
+      <div className="text-gray-900 dark:text-gray-100">
+        <h1 className="text-4xl font-extrabold font-dmserif bg-gradient-to-r from-pink-500 via-fuchsia-500 to-purple-500 text-transparent bg-clip-text animate-pulse">
+          Welcome Admin {user.name}!
+        </h1>
+        <p className="mt-2 text-lg text-gray-600 dark:text-gray-300">
+          Here’s your overview for the month:
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+          {[
+            { title: "Total Employees", value: 42 },
+            { title: "Departments", value: 5 },
+            { title: "Monthly Payroll", value: "₱150,000" },
+            { title: "Leave Applied", value: 10 },
+            { title: "Leave Pending", value: 3 },
+            { title: "Leave Approved", value: 6 },
+            { title: "Leave Rejected", value: 1 },
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              className="p-6 rounded-2xl shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition"
+            >
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
+                {item.title}
+              </p>
+              <h2 className="text-2xl font-bold mt-1 text-pink-600 dark:text-pink-400">
+                {item.value}
+              </h2>
+            </div>
+          ))}
+        </div>
+      </div>
+    </AdminLayout>
+  );
 };
 
 export default AdminDashboard;
