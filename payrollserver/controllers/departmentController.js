@@ -27,5 +27,40 @@ const addDepartment = async (req, res) => {
       .json({ success: false, error: "add department server error" });
   }
 };
+const getDepartments = async (req, res) => {
+  try {
+    const departments = await Department.find().sort({ createdAt: -1 });
+    res.json({ success: true, departments });
+  } catch (error) {
+    console.error("Error fetching departments:", error);
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch departments" });
+  }
+};
+const deleteDepartment = async (req, res) => {
+  try {
+    await Department.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: "Delete failed" });
+  }
+};
 
-export { addDepartment };
+const updateDepartment = async (req, res) => {
+  try {
+    const { name, employeeCount, description } = req.body;
+    const updated = await Department.findByIdAndUpdate(
+      req.params.id,
+      { name, employeeCount, description },
+      { new: true }
+    );
+    res.json({ success: true, department: updated });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: "Update failed" });
+  }
+};
+
+export { addDepartment, getDepartments,  deleteDepartment, updateDepartment};

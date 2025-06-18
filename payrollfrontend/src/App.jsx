@@ -7,7 +7,8 @@ import ProtectedRoute from "./components/ProtectedRoutes.jsx";
 import RoleBasedRoute from "./utils/RoleBasedRoute.jsx";
 import Logout from "./pages/Logout.jsx"; // ⬅️ Make sure this is imported
 import Departments from "./pages/Departments.jsx";
-
+import { Toaster } from "react-hot-toast";
+<Toaster />
 function App() {
   // const [darkMode, setDarkMode] = useState(() => {
   //   const savedTheme = localStorage.getItem("theme");
