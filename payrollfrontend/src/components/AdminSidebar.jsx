@@ -5,8 +5,12 @@ import {
   HomeIcon,
   UsersIcon,
   CreditCardIcon,
+  CalendarClockIcon,
   CogIcon,
   LogOutIcon,
+  BuildingIcon,
+  FingerprintIcon,
+  FileTextIcon,
 } from "lucide-react"; // uses lucide-react for modern icons
 
 const links = [
@@ -21,9 +25,29 @@ const links = [
     icon: <UsersIcon className="w-5 h-5" />,
   },
   {
+    to: "/admin-dashboard/departments",
+    label: "Departments",
+    icon: <BuildingIcon className="w-5 h-5" />,
+  },
+  {
     to: "/payroll",
     label: "Payroll",
     icon: <CreditCardIcon className="w-5 h-5" />,
+  },
+  {
+    to: "/attendace",
+    label: "Attendance",
+    icon: <FingerprintIcon className="w-5 h-5" />,
+  },
+  {
+    to: "/leaves",
+    label: "Leave Management",
+    icon: <CalendarClockIcon className="w-5 h-5" />,
+  },
+  {
+    to: "/reports",
+    label: "Reports",
+    icon: <FileTextIcon className="w-5 h-5" />,
   },
   { to: "/settings", label: "Settings", icon: <CogIcon className="w-5 h-5" /> },
   {
@@ -36,7 +60,7 @@ const links = [
 
 const AdminSidebar = () => {
   return (
-    <div className="h-screen w-64 bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-6 flex flex-col shadow-lg">
+    <div className="h-screen w-64 bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-6 flex flex-col shadow-lg sticky top-0 z-50">
       <div className="text-2xl font-extrabold font-dmserif mb-8 tracking-tight text-purple-700 dark:text-purple-400">
         Admin Panel
       </div>
@@ -46,6 +70,7 @@ const AdminSidebar = () => {
           <li key={to}>
             <NavLink
               to={to}
+              end={to === "/admin-dashboard"}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-2 rounded-md transition-all duration-200
                 ${

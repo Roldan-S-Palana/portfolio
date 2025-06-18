@@ -9,38 +9,36 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const verifyUser = async () => {
-      console.log("🔎 Verifying user...");
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        console.log("⚠️ No token found.");
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
       try {
-        const token = localStorage.getItem("token");
-        console.log("📦 Token from localStorage:", token);
-
-        if (token) {
-          const response = await axios.get(
-            "http://localhost:3000/api/auth/verify",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          console.log("✅ Verification response:", response.data);
-
-          if (response.data.success) {
-            setUser(response.data.user);
-            console.log("👤 User set:", response.data.user);
-          } else {
-            console.log("❌ Verification failed:", response.data);
-            setUser(null);
+        const response = await axios.get(
+          "http://localhost:3000/api/auth/verify",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
+        );
+
+        if (response.data.success) {
+          setUser(response.data.user); // <- set verified user
         } else {
-          console.log("⚠️ No token found.");
+          localStorage.removeItem("token");
           setUser(null);
         }
-      } catch (error) {
-        console.error("❗ Error during verification:", error);
+      } catch (err) {
+        console.error("❗ Verification failed:", err);
+        localStorage.removeItem("token");
         setUser(null);
       } finally {
-        console.log("✅ Finished verification, setting loading to false");
         setLoading(false);
       }
     };
@@ -48,10 +46,10 @@ const AuthProvider = ({ children }) => {
     verifyUser();
   }, []);
 
-  const login = (userData) => {
+  const login = (userData, token) => {
     console.log("🔐 Logging in user:", userData);
     setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("token", token); // ✅ Now token is defined
   };
 
   const logout = () => {

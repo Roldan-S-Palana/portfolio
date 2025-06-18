@@ -6,6 +6,7 @@ import NotFound from "./pages/NotFound.jsx"; // create this page
 import ProtectedRoute from "./components/ProtectedRoutes.jsx";
 import RoleBasedRoute from "./utils/RoleBasedRoute.jsx";
 import Logout from "./pages/Logout.jsx"; // ⬅️ Make sure this is imported
+import Departments from "./pages/Departments.jsx";
 
 function App() {
   // const [darkMode, setDarkMode] = useState(() => {
@@ -54,6 +55,16 @@ function App() {
             <ProtectedRoute>
               <RoleBasedRoute requiredRole={"admin"}>
                 <AdminDashboard />
+              </RoleBasedRoute>
+            </ProtectedRoute>
+          }
+        />
+         <Route
+          path="/admin-dashboard/departments"
+          element={
+            <ProtectedRoute>
+              <RoleBasedRoute requiredRole={"admin"}>
+                <Departments />
               </RoleBasedRoute>
             </ProtectedRoute>
           }

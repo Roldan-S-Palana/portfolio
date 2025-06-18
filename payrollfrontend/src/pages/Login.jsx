@@ -31,8 +31,7 @@ const Login = () => {
       password
       });
       if(response.data.success){
-        login(response.data.user);
-        localStorage.setItem("token", response.data.token);
+        login(response.data.user, response.data.token);
         if(response.data.user.role === "admin"){
           navigate('/admin-dashboard');
         }else{
