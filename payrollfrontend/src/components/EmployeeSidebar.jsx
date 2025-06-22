@@ -1,38 +1,18 @@
-// src/components/AdminSidebar.jsx
 import React from "react";
 import { NavLink } from "react-router-dom";
 import {
   HomeIcon,
-  UsersIcon,
-  CreditCardIcon,
   CalendarClockIcon,
   CogIcon,
   LogOutIcon,
-  BuildingIcon,
   FingerprintIcon,
-  FileTextIcon,
-} from "lucide-react"; // uses lucide-react for modern icons
+} from "lucide-react";
 
 const links = [
   {
-    to: "/admin-dashboard",
+    to: "/employee-dashboard",
     label: "Dashboard",
     icon: <HomeIcon className="w-5 h-5" />,
-  },
-  {
-    to: "/employees",
-    label: "Employees",
-    icon: <UsersIcon className="w-5 h-5" />,
-  },
-  {
-    to: "/departments",
-    label: "Departments",
-    icon: <BuildingIcon className="w-5 h-5" />,
-  },
-  {
-    to: "/payroll",
-    label: "Payroll",
-    icon: <CreditCardIcon className="w-5 h-5" />,
   },
   {
     to: "/attendance",
@@ -45,11 +25,10 @@ const links = [
     icon: <CalendarClockIcon className="w-5 h-5" />,
   },
   {
-    to: "/reports",
-    label: "Reports",
-    icon: <FileTextIcon className="w-5 h-5" />,
+    to: "/settings",
+    label: "Settings",
+    icon: <CogIcon className="w-5 h-5" />,
   },
-  { to: "/settings", label: "Settings", icon: <CogIcon className="w-5 h-5" /> },
   {
     to: "/logout",
     label: "Logout",
@@ -58,11 +37,11 @@ const links = [
   },
 ];
 
-const AdminSidebar = () => {
+const EmployeeSidebar = () => {
   return (
     <div className="h-screen w-64 bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-6 flex flex-col shadow-lg sticky top-0 z-50">
       <div className="text-2xl font-extrabold font-dmserif mb-8 tracking-tight text-purple-700 dark:text-purple-400">
-        Admin Panel
+        Employee Panel
       </div>
 
       <ul className="space-y-3 flex-1">
@@ -70,7 +49,7 @@ const AdminSidebar = () => {
           <li key={to}>
             <NavLink
               to={to}
-              end={to === "/admin-dashboard"}
+              end={to === "/employee-dashboard"}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-2 rounded-md transition-all duration-200
                 ${
@@ -78,7 +57,6 @@ const AdminSidebar = () => {
                     ? "bg-gray-200 dark:bg-gray-800 text-violet-700 dark:text-violet-500"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-fuchsia-600 dark:hover:text-fuchsia-400"
                 }
-
                 ${danger ? "hover:text-red-400" : ""}`
               }
             >
@@ -96,4 +74,4 @@ const AdminSidebar = () => {
   );
 };
 
-export default AdminSidebar;
+export default EmployeeSidebar;

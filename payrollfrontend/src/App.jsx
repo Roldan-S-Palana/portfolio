@@ -9,6 +9,8 @@ import Logout from "./pages/Logout.jsx"; // ⬅️ Make sure this is imported
 import Departments from "./pages/Departments.jsx";
 import { Toaster } from "react-hot-toast";
 import Employees from "./pages/Employees.jsx";
+import LeaveManagement from "./pages/LeaveManagement.jsx";
+import Attendance from "./pages/Attendance.jsx";
 <Toaster />
 function App() {
 
@@ -44,7 +46,7 @@ function App() {
           }
         />
          <Route
-          path="/admin-dashboard/departments"
+          path="/departments"
           element={
             <ProtectedRoute>
               <RoleBasedRoute requiredRole={"admin"}>
@@ -54,11 +56,31 @@ function App() {
           }
         />
         <Route
-          path="/admin-dashboard/employees"
+          path="/employees"
           element={
             <ProtectedRoute>
               <RoleBasedRoute requiredRole={"admin"}>
                 <Employees />
+              </RoleBasedRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/attendance"
+          element={
+            <ProtectedRoute>
+              <RoleBasedRoute requiredRole={"admin"}>
+                <Attendance />
+              </RoleBasedRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/leave-management"
+          element={
+            <ProtectedRoute>
+              <RoleBasedRoute requiredRole={"admin"}>
+                <LeaveManagement />
               </RoleBasedRoute>
             </ProtectedRoute>
           }

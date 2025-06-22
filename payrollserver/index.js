@@ -10,6 +10,8 @@ import path from 'path'; // ← for resolving upload paths
 import authRouter from './routes/auth.js';
 import departmentRouter from './routes/department.js';
 import employeeRoutes from './routes/employee.js';
+import attendanceRouter from './routes/attendance.js';
+import leaveRouter from './routes/leave.js';
 
 // Connect to DB
 import connectToDatabase from './db/db.js';
@@ -33,6 +35,9 @@ app.use('/uploads', express.static('uploads'));
 app.use('/api/auth', authRouter);
 app.use('/api/department', departmentRouter);
 app.use('/api/employee', employeeRoutes); // 💡 This must come *before* listen()
+app.use('/api/attendance', attendanceRouter);
+app.use('/api/leaves', leaveRouter);
+
 
 // MongoDB connect
 const PORT = process.env.PORT || 3000;
