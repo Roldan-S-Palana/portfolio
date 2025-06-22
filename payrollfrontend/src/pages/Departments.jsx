@@ -208,7 +208,7 @@ const Departments = () => {
                 <div className="flex justify-end gap-3 mt-4">
                   <button
                     onClick={() => onEdit(dept)}
-                    className="text-blue-600 hover:underline"
+                    className="text-purple-600 hover:underline"
                   >
                     Edit
                   </button>

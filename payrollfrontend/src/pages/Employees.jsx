@@ -105,11 +105,11 @@ const Employees = () => {
       <div className="text-gray-900 dark:text-gray-100">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold flex items-center gap-2">
-            <UsersIcon className="w-6 h-6 text-blue-500" /> Employees
+            <UsersIcon className="w-6 h-6 text-purple-600" /> Employees
           </h1>
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition"
           >
             <PlusIcon className="w-4 h-4" /> Add Employee
           </button>
@@ -150,7 +150,7 @@ const Employees = () => {
                     <img
                       src={`http://localhost:3000/uploads/${emp.image}`}
                       alt={emp.name}
-                      className="w-20 h-20 rounded-full object-cover border-2 border-blue-500"
+                      className="w-20 h-20 rounded-full object-cover border-2 border-purple-600"
                     />
                   ) : (
                     <div className="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-sm">
@@ -158,7 +158,7 @@ const Employees = () => {
                     </div>
                   )}
                 </div>
-                <h2 className="text-xl font-semibold text-blue-600 dark:text-blue-400">
+                <h2 className="text-xl font-semibold text-purple-600 dark:text-purple-700">
                   {emp.name}
                 </h2>
                 <p className="text-sm text-gray-500 dark:text-gray-300">
@@ -184,7 +184,7 @@ const Employees = () => {
                   onClick={() => setPage(i + 1)}
                   className={`px-3 py-1 rounded ${
                     page === i + 1
-                      ? "bg-blue-600 text-white"
+                      ? "bg-purple-600 text-white"
                       : "bg-gray-200 dark:bg-gray-700 dark:text-white"
                   }`}
                 >
@@ -199,7 +199,7 @@ const Employees = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-xl w-full max-w-md">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-blue-600 dark:text-blue-400">
+                <h2 className="text-xl font-semibold text-purple-600 dark:text-purple-400">
                   Add Employee
                 </h2>
                 <button onClick={() => setShowModal(false)}>
@@ -283,7 +283,7 @@ const Employees = () => {
                 <div className="flex justify-end mt-4">
                   <button
                     onClick={handleAdd}
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                    className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition"
                   >
                     Save
                   </button>
