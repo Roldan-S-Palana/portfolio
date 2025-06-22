@@ -48,9 +48,15 @@ const AuthProvider = ({ children }) => {
 
   const login = (userData, token) => {
     console.log("🔐 Logging in user:", userData);
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
-    localStorage.setItem("token", token); // ✅ Now token is defined
+    setLoading(false);
   };
+
+  useEffect(() => {
+    console.log("🧠 Auth State Changed:", { user, loading });
+  }, [user, loading]);
 
   const logout = () => {
     console.log("🚪 Logging out");

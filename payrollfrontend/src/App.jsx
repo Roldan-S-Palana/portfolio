@@ -8,27 +8,10 @@ import RoleBasedRoute from "./utils/RoleBasedRoute.jsx";
 import Logout from "./pages/Logout.jsx"; // ⬅️ Make sure this is imported
 import Departments from "./pages/Departments.jsx";
 import { Toaster } from "react-hot-toast";
+import Employees from "./pages/Employees.jsx";
 <Toaster />
 function App() {
-  // const [darkMode, setDarkMode] = useState(() => {
-  //   const savedTheme = localStorage.getItem("theme");
-  //   if (savedTheme) return savedTheme === "dark";
 
-  //   const prefersDark = window.matchMedia(
-  //     "(prefers-color-scheme: dark)"
-  //   ).matches;
-  //   return prefersDark;
-  // });
-
-  // useEffect(() => {
-  //   if (darkMode) {
-  //     document.documentElement.classList.add("dark");
-  //     localStorage.setItem("theme", "dark");
-  //   } else {
-  //     document.documentElement.classList.remove("dark");
-  //     localStorage.setItem("theme", "light");
-  //   }
-  // }, [darkMode]);
 
   console.log("Rendering App.jsx");
 
@@ -66,6 +49,16 @@ function App() {
             <ProtectedRoute>
               <RoleBasedRoute requiredRole={"admin"}>
                 <Departments />
+              </RoleBasedRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin-dashboard/employees"
+          element={
+            <ProtectedRoute>
+              <RoleBasedRoute requiredRole={"admin"}>
+                <Employees />
               </RoleBasedRoute>
             </ProtectedRoute>
           }

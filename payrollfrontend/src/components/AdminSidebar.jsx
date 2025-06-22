@@ -20,7 +20,7 @@ const links = [
     icon: <HomeIcon className="w-5 h-5" />,
   },
   {
-    to: "/employees",
+    to: "/admin-dashboard/employees",
     label: "Employees",
     icon: <UsersIcon className="w-5 h-5" />,
   },

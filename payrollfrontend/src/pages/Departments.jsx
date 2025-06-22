@@ -4,6 +4,7 @@ import { Building2Icon, PlusIcon, XIcon } from "lucide-react";
 import axios from "axios";
 import { useAuth } from "../context/authContext.jsx";
 import toast from "react-hot-toast";
+import DashboardSkeleton from "../components/Skeleton.jsx";
 
 const Departments = () => {
   const { user } = useAuth();
@@ -14,6 +15,7 @@ const Departments = () => {
   const [page, setPage] = useState(1);
   const pageSize = 6;
   const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [newDept, setNewDept] = useState({
     name: "",
@@ -24,14 +26,18 @@ const Departments = () => {
 
   useEffect(() => {
     const fetchDepartments = async () => {
+      setLoading(true);
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
           "http://localhost:3000/api/department/all",
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
+
         if (res.data.success) {
           setAllDepartments(res.data.departments);
           setDepartments(res.data.departments);
@@ -41,8 +47,11 @@ const Departments = () => {
           "Failed to fetch departments:",
           err.response?.data || err
         );
+      } finally {
+        setLoading(false);
       }
     };
+
     fetchDepartments();
   }, []);
 
@@ -132,6 +141,7 @@ const Departments = () => {
       toast.success("Department deleted!");
     } catch (err) {
       toast.error("Delete failed");
+      console.error(err.response?.data || err);
     }
   };
 
@@ -175,41 +185,44 @@ const Departments = () => {
             </select>
           </div>
         </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {paginated.map((dept, idx) => (
-            <div
-              key={idx}
-              className="p-4 rounded-xl bg-white dark:bg-gray-800 shadow border dark:border-gray-700 hover:shadow-md transition"
-            >
-              <h2 className="text-xl font-semibold text-purple-600 dark:text-purple-400">
-                {dept.name}
-              </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-300">
-                Employees: {dept.employeeCount}
-              </p>
-              {dept.description && (
-                <p className="text-sm mt-2 text-gray-600 dark:text-gray-400 italic">
-                  {dept.description}
+        {loading ? (
+          <DashboardSkeleton />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {paginated.map((dept, idx) => (
+              <div
+                key={idx}
+                className="p-4 rounded-xl bg-white dark:bg-gray-800 shadow border dark:border-gray-700 hover:shadow-md transition"
+              >
+                <h2 className="text-xl font-semibold text-purple-600 dark:text-purple-400">
+                  {dept.name}
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-gray-300">
+                  Employees: {dept.employeeCount}
                 </p>
-              )}
-              <div className="flex justify-end gap-3 mt-4">
-                <button
-                  onClick={() => onEdit(dept)}
-                  className="text-blue-600 hover:underline"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => onDelete(dept._id)}
-                  className="text-red-600 hover:underline"
-                >
-                  Delete
-                </button>
+                {dept.description && (
+                  <p className="text-sm mt-2 text-gray-600 dark:text-gray-400 italic">
+                    {dept.description}
+                  </p>
+                )}
+                <div className="flex justify-end gap-3 mt-4">
+                  <button
+                    onClick={() => onEdit(dept)}
+                    className="text-blue-600 hover:underline"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => onDelete(dept._id)}
+                    className="text-red-600 hover:underline"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         <div className="mt-6 flex justify-center gap-2">
           {Array.from({ length: Math.ceil(departments.length / pageSize) }).map(
