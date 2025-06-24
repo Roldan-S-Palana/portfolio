@@ -12,10 +12,9 @@ import Employees from "./pages/Employees.jsx";
 import LeaveManagement from "./pages/LeaveManagement.jsx";
 import Attendance from "./pages/Attendance.jsx";
 import EmployeeAttendance from "./pages/EmployeeAttendance.jsx";
-<Toaster />
+import EmployeeLeave from "./pages/EmployeeLeave.jsx";
+<Toaster />;
 function App() {
-
-
   console.log("Rendering App.jsx");
 
   return (
@@ -46,7 +45,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-         <Route
+        <Route
           path="/departments"
           element={
             <ProtectedRoute>
@@ -96,7 +95,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-         <Route
+        <Route
           path="/employee-attendance"
           element={
             <ProtectedRoute>
@@ -106,28 +105,26 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="*" element={<NotFound />} /> {/* catch-all */}
       </Routes>
       <Routes>
-       <Route
+        <Route
           path="/employee-leave-management"
           element={
             <ProtectedRoute>
               <RoleBasedRoute requiredRole={"employee"}>
-                <EmployeeAttendance />
+                <EmployeeLeave />
               </RoleBasedRoute>
             </ProtectedRoute>
           }
         />
-        <Route path="*" element={<NotFound />} /> {/* catch-all */}
       </Routes>
-       <Routes>
-       <Route
+      <Routes>
+        <Route
           path="/employee-settings"
           element={
             <ProtectedRoute>
               <RoleBasedRoute requiredRole={"employee"}>
-                <EmployeeAttendance /> 
+                <EmployeeAttendance />
               </RoleBasedRoute>
             </ProtectedRoute>
           }

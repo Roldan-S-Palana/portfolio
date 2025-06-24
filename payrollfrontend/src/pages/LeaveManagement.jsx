@@ -12,7 +12,7 @@ const LeaveManagement = () => {
   const fetchLeaves = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("/api/leaves/all", {
+      const res = await axios.get("http://localhost:3000/api/leaves/all", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setLeaves(res.data.leaves || []);
@@ -30,7 +30,7 @@ const LeaveManagement = () => {
   const updateStatus = async (id, status) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.patch(`/api/leaves/${id}/status`, { status }, {
+      await axios.patch(`http://localhost:3000/api/leaves/${id}/status`, { status }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success(`Leave ${status}`);

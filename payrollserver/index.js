@@ -34,15 +34,29 @@ app.use('/uploads', express.static('uploads'));
 // Routes
 app.use('/api/auth', authRouter);
 app.use('/api/department', departmentRouter);
-app.use('/api/employee', employeeRoutes); // 💡 This must come *before* listen()
+app.use('/api/employee', employeeRoutes); 
 app.use('/api/attendance', attendanceRouter);
 app.use('/api/leaves', leaveRouter);
 
-
-// MongoDB connect
+// Server + Routes Logger
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
-});
 
+  // Safely log all registered routes
+  setTimeout(() => {
+    if (app._router && app._router.stack) {
+      app._router.stack
+        .filter(r => r.route)
+        .forEach(r => {
+          const methods = Object.keys(r.route.methods)
+            .map(m => m.toUpperCase())
+            .join(', ');
+          console.log(`${methods} ${r.route.path}`);
+        });
+    } else {
+      console.log("⚠️ No routes found in router stack.");
+    }
+  }, 100);
+});

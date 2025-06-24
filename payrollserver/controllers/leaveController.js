@@ -34,3 +34,13 @@ export const updateLeaveStatus = async (req, res) => {
     res.status(500).json({ success: false, error: 'Failed to update leave status' });
   }
 };
+
+export const getMyLeaveRequests = async (req, res) => {
+  try {
+    const employee = req.user._id;
+    const leaves = await LeaveRequest.find({ employee }).sort({ createdAt: -1 });
+    res.status(200).json({ success: true, leaves });
+  } catch (err) {
+    res.status(500).json({ success: false, error: 'Failed to fetch your leave requests' });
+  }
+};
