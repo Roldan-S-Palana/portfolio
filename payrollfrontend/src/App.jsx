@@ -11,6 +11,7 @@ import { Toaster } from "react-hot-toast";
 import Employees from "./pages/Employees.jsx";
 import LeaveManagement from "./pages/LeaveManagement.jsx";
 import Attendance from "./pages/Attendance.jsx";
+import EmployeeAttendance from "./pages/EmployeeAttendance.jsx";
 <Toaster />
 function App() {
 
@@ -91,6 +92,42 @@ function App() {
             <ProtectedRoute>
               <RoleBasedRoute requiredRole={"employee"}>
                 <EmployeeDashboard />
+              </RoleBasedRoute>
+            </ProtectedRoute>
+          }
+        />
+         <Route
+          path="/employee-attendance"
+          element={
+            <ProtectedRoute>
+              <RoleBasedRoute requiredRole={"employee"}>
+                <EmployeeAttendance />
+              </RoleBasedRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<NotFound />} /> {/* catch-all */}
+      </Routes>
+      <Routes>
+       <Route
+          path="/employee-leave-management"
+          element={
+            <ProtectedRoute>
+              <RoleBasedRoute requiredRole={"employee"}>
+                <EmployeeAttendance />
+              </RoleBasedRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<NotFound />} /> {/* catch-all */}
+      </Routes>
+       <Routes>
+       <Route
+          path="/employee-settings"
+          element={
+            <ProtectedRoute>
+              <RoleBasedRoute requiredRole={"employee"}>
+                <EmployeeAttendance /> 
               </RoleBasedRoute>
             </ProtectedRoute>
           }

@@ -19,10 +19,12 @@ const Attendance = () => {
   const fetchAttendance = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("/api/attendance/all", {
+      const res = await axios.get("http://localhost:3000/api/attendance/all", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setRecords(res.data.attendance || []);
+
+      console.log(res.data);
+      setRecords(res.data.records || []);
     } catch (err) {
       toast.error("Failed to load attendance");
     } finally {
@@ -32,7 +34,12 @@ const Attendance = () => {
 
   const exportCSV = () => {
     const csv = records
-      .map((r) => `${r.employee.name},${r.date},${r.clockIn},${r.clockOut}`)
+      .map(
+        (r) =>
+          `${r.employee.name},${format(new Date(r.date), "yyyy-MM-dd")},${
+            r.checkIn
+          },${r.checkOut}`
+      )
       .join("\n");
     const blob = new Blob(["Name,Date,In,Out\n" + csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
@@ -65,42 +72,51 @@ const Attendance = () => {
             Export CSV
           </button>
         </div>
-
-        <table className="min-w-full bg-white dark:bg-gray-900 rounded shadow overflow-hidden">
-          <thead className="bg-gray-100 dark:bg-gray-800 text-left text-gray-600 dark:text-gray-300">
-            <tr>
-              <th className="p-3">Employee</th>
-              <th className="p-3">Date</th>
-              <th className="p-3">Clock In</th>
-              <th className="p-3">Clock Out</th>
-              <th className="p-3">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((r, idx) => (
-              <tr
-                key={idx}
-                className="border-t border-gray-200 dark:border-gray-700"
-              >
-                <td className="p-3">{r.employee.name}</td>
-                <td className="p-3">{format(new Date(r.date), "PPP")}</td>
-                <td className="p-3">{r.clockIn || "N/A"}</td>
-                <td className="p-3">{r.clockOut || "N/A"}</td>
-                <td className="p-3">
-                  <span
-                    className={`px-2 py-1 rounded text-xs font-semibold ${
-                      r.clockOut
-                        ? "bg-green-100 text-green-600"
-                        : "bg-yellow-100 text-yellow-600"
-                    }`}
-                  >
-                    {r.clockOut ? "Complete" : "Ongoing"}
-                  </span>
-                </td>
+        {loading ? (
+          <div className="text-center p-4">Loading attendance...</div>
+        ) : (
+          <table className="min-w-full bg-white dark:bg-gray-900 rounded shadow overflow-hidden">
+            <thead className="bg-gray-100 dark:bg-gray-800 text-left text-gray-600 dark:text-gray-300">
+              <tr>
+                <th className="p-3">Employee</th>
+                <th className="p-3">Date</th>
+                <th className="p-3">Clock In</th>
+                <th className="p-3">Clock Out</th>
+                <th className="p-3">Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filtered.map((r, idx) => (
+                <tr
+                  key={idx}
+                  className="border-t border-gray-200 dark:border-gray-700"
+                >
+                  <td className="p-3">{r.employee.name}</td>
+                  <td className="p-3">{format(new Date(r.date), "PPP")}</td>
+                  <td className="p-3">{r.checkIn || "N/A"}</td>
+                  <td className="p-3">{r.checkOut || "N/A"}</td>
+                  <td className="p-3">
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-semibold ${
+                        r.checkIn && r.checkOut
+                          ? "bg-green-100 text-green-600"
+                          : r.checkIn
+                          ? "bg-yellow-100 text-yellow-600"
+                          : "bg-red-100 text-red-600"
+                      }`}
+                    >
+                      {r.checkIn && r.checkOut
+                        ? "Complete"
+                        : r.checkIn
+                        ? "Ongoing"
+                        : "Absent"}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
 
         {/* Pagination */}
         <div className="flex justify-center mt-6 gap-2">

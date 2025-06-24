@@ -41,7 +41,7 @@ const AdminDashboard = () => {
     <AdminLayout>
       <div className="text-gray-900 dark:text-gray-100">
         <h1 className="text-4xl font-extrabold font-dmserif bg-gradient-to-r from-pink-500 via-fuchsia-500 to-purple-500 text-transparent bg-clip-text animate-pulse">
-          Welcome Admin {user.name}!
+          Welcome {user.name}!
         </h1>
         <p className="mt-2 text-lg text-gray-600 dark:text-gray-300">
           Here’s your overview for the month:

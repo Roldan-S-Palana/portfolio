@@ -15,17 +15,17 @@ const links = [
     icon: <HomeIcon className="w-5 h-5" />,
   },
   {
-    to: "/attendance",
+    to: "/employee-attendance",
     label: "Attendance",
     icon: <FingerprintIcon className="w-5 h-5" />,
   },
   {
-    to: "/leave-management",
+    to: "/employee-leave-management",
     label: "Leave Management",
     icon: <CalendarClockIcon className="w-5 h-5" />,
   },
   {
-    to: "/settings",
+    to: "/employee-settings",
     label: "Settings",
     icon: <CogIcon className="w-5 h-5" />,
   },
