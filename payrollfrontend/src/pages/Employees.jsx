@@ -19,6 +19,8 @@ const Employees = () => {
     department: "",
     email: "",
   });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editId, setEditId] = useState(null);
 
   const fetchEmployees = async () => {
     setLoading(true);
@@ -56,12 +58,11 @@ const Employees = () => {
     setPage(1);
   }, [search, sort]);
 
-  const handleAdd = async () => {
+  const handleSubmit = async () => {
     if (!newEmployee.name || !newEmployee.position) return;
 
     try {
       const token = localStorage.getItem("token");
-
       const formData = new FormData();
       formData.append("name", newEmployee.name);
       formData.append("position", newEmployee.position);
@@ -71,31 +72,76 @@ const Employees = () => {
         formData.append("image", newEmployee.image);
       }
 
-      const res = await axios.post(
-        "http://localhost:3000/api/employee/add",
-        formData,
+      if (isEditing) {
+        const res = await axios.put(
+          `http://localhost:3000/api/employee/update/${editId}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        if (res.data.success) {
+          setEmployees((prev) =>
+            prev.map((e) => (e._id === editId ? res.data.employee : e))
+          );
+          toast.success("Employee updated ✅");
+        }
+      } else {
+        const res = await axios.post(
+          "http://localhost:3000/api/employee/add",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        if (res.data.success) {
+          setEmployees((prev) => [...prev, res.data.employee]);
+          toast.success("Employee added ✅");
+        }
+      }
+
+      setShowModal(false);
+      setNewEmployee({
+        name: "",
+        position: "",
+        department: "",
+        email: "",
+        image: null,
+      });
+      setIsEditing(false);
+      setEditId(null);
+    } catch (err) {
+      toast.error(isEditing ? "Update failed" : "Add failed");
+      console.error(err);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this employee?")) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.delete(
+        `http://localhost:3000/api/employee/delete/${id}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
       if (res.data.success) {
-        setEmployees((prev) => [...prev, res.data.employee]);
-        setShowModal(false);
-        setNewEmployee({
-          name: "",
-          position: "",
-          department: "",
-          email: "",
-          image: null,
-        });
-        toast.success("Employee added ✅");
+        setEmployees((prev) => prev.filter((e) => e._id !== id));
+        toast.success("Employee deleted");
       }
     } catch (err) {
-      toast.error("Add failed");
+      toast.error("Delete failed");
       console.error(err);
     }
   };
@@ -146,9 +192,9 @@ const Employees = () => {
               >
                 {/* 🖼️ Image block */}
                 <div className="flex justify-center mb-2">
-                  {emp.image ? (
+                  {emp.profileImage ? (
                     <img
-                      src={`http://localhost:3000/uploads/${emp.image}`}
+                      src={`http://localhost:3000/uploads/${emp.profileImage}`}
                       alt={emp.name}
                       className="w-20 h-20 rounded-full object-cover border-2 border-purple-600"
                     />
@@ -170,6 +216,31 @@ const Employees = () => {
                 <p className="text-sm text-gray-500 dark:text-gray-300">
                   Email: {emp.email}
                 </p>
+                <div className="flex gap-2 mt-3">
+                  <button
+                    onClick={() => {
+                      setNewEmployee({
+                        name: emp.name,
+                        position: emp.position,
+                        department: emp.department,
+                        email: emp.email,
+                        image: null,
+                      });
+                      setEditId(emp._id);
+                      setIsEditing(true);
+                      setShowModal(true);
+                    }}
+                    className="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(emp._id)}
+                    className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             ))
           )}
@@ -280,9 +351,10 @@ const Employees = () => {
                     }
                   />
                 </div>
+
                 <div className="flex justify-end mt-4">
                   <button
-                    onClick={handleAdd}
+                    onClick={handleSubmit}
                     className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition"
                   >
                     Save

@@ -1,4 +1,4 @@
-import LeaveRequest from '../models/LeaveRequest.js';
+import LeaveRequest from "../models/LeaveRequest.js";
 
 export const applyLeave = async (req, res) => {
   try {
@@ -10,43 +10,65 @@ export const applyLeave = async (req, res) => {
 
     res.status(201).json({ success: true, leave });
   } catch (err) {
-    res.status(500).json({ success: false, error: 'Failed to apply for leave' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to apply for leave" });
   }
 };
 
 export const getAllLeaveRequests = async (req, res) => {
   try {
     // 🛡️ Check if the user is an admin
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ success: false, error: 'Access denied. Admins only.' });
+    if (req.user.role !== "admin") {
+      return res
+        .status(403)
+        .json({ success: false, error: "Access denied. Admins only." });
     }
 
-    const leaves = await LeaveRequest.find().populate('employee', 'name');
+    const leaves = await LeaveRequest.find().populate("employee", "name");
     res.status(200).json({ success: true, leaves });
   } catch (err) {
-    res.status(500).json({ success: false, error: 'Failed to fetch leave requests' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch leave requests" });
   }
 };
-
 
 export const updateLeaveStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
 
-    const updated = await LeaveRequest.findByIdAndUpdate(id, { status }, { new: true });
+    // 🛡️ Check if the user is an admin
+    if (req.user.role !== "admin") {
+      return res
+        .status(403)
+        .json({ success: false, error: "Access denied. Admins only." });
+    }
+
+    const updated = await LeaveRequest.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
     res.status(200).json({ success: true, updated });
   } catch (err) {
-    res.status(500).json({ success: false, error: 'Failed to update leave status' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to update leave status" });
   }
 };
 
 export const getMyLeaveRequests = async (req, res) => {
   try {
     const employee = req.user._id;
-    const leaves = await LeaveRequest.find({ employee }).sort({ createdAt: -1 });
+    const leaves = await LeaveRequest.find({ employee }).sort({
+      createdAt: -1,
+    });
     res.status(200).json({ success: true, leaves });
   } catch (err) {
-    res.status(500).json({ success: false, error: 'Failed to fetch your leave requests' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch your leave requests" });
   }
 };

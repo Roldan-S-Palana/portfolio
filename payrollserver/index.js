@@ -15,6 +15,7 @@ import leaveRouter from './routes/leave.js';
 
 // Connect to DB
 import connectToDatabase from './db/db.js';
+import payrollRouter from './routes/payroll.js';
 connectToDatabase();
 
 const app = express();
@@ -37,6 +38,7 @@ app.use('/api/department', departmentRouter);
 app.use('/api/employee', employeeRoutes); 
 app.use('/api/attendance', attendanceRouter);
 app.use('/api/leaves', leaveRouter);
+app.use('/api/payroll', payrollRouter);
 
 // Server + Routes Logger
 const PORT = process.env.PORT || 3000;

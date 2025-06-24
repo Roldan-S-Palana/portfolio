@@ -13,6 +13,7 @@ import LeaveManagement from "./pages/LeaveManagement.jsx";
 import Attendance from "./pages/Attendance.jsx";
 import EmployeeAttendance from "./pages/EmployeeAttendance.jsx";
 import EmployeeLeave from "./pages/EmployeeLeave.jsx";
+import PayrollPage from "./pages/PayrollPage";
 <Toaster />;
 function App() {
   console.log("Rendering App.jsx");
@@ -46,6 +47,16 @@ function App() {
           }
         />
         <Route
+          path="/payroll"
+          element={
+            <ProtectedRoute>
+              <RoleBasedRoute requiredRole={"admin"}>
+                <PayrollPage />
+              </RoleBasedRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/departments"
           element={
             <ProtectedRoute>
@@ -56,7 +67,7 @@ function App() {
           }
         />
         <Route
-          path="/employees"
+          path="/employee"
           element={
             <ProtectedRoute>
               <RoleBasedRoute requiredRole={"admin"}>
