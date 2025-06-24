@@ -57,7 +57,7 @@ function App() {
           }
         />
         <Route
-          path="/departments"
+          path="/department"
           element={
             <ProtectedRoute>
               <RoleBasedRoute requiredRole={"admin"}>

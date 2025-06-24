@@ -25,7 +25,7 @@ const links = [
     icon: <UsersIcon className="w-5 h-5" />,
   },
   {
-    to: "/departments",
+    to: "/department",
     label: "Departments",
     icon: <BuildingIcon className="w-5 h-5" />,
   },

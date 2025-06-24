@@ -4,6 +4,7 @@ import AdminLayout from "../layouts/AdminLayout";
 import { UsersIcon, PlusIcon, XIcon } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Combobox } from "@headlessui/react";
 
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
@@ -21,6 +22,29 @@ const Employees = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [departments, setDepartments] = useState([]);
+  const safeSearch = (search || "").toLowerCase();
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(
+          "http://localhost:3000/api/department/all",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (res.data.success) {
+          setDepartments(res.data.departments); // assuming each has `.name`
+        }
+      } catch (err) {
+        console.error("Failed to load departments", err);
+      }
+    };
+
+    fetchDepartments();
+  }, []);
 
   const fetchEmployees = async () => {
     setLoading(true);
@@ -46,7 +70,13 @@ const Employees = () => {
   }, []);
 
   const paginated = employees
-    .filter((e) => e.name.toLowerCase().includes(search.toLowerCase()))
+
+    .filter(
+      (e) =>
+        (e.name || "").toLowerCase().includes(safeSearch) ||
+        (e.position || "").toLowerCase().includes(safeSearch) ||
+        (e.department || "").toLowerCase().includes(safeSearch)
+    )
     .sort((a, b) => {
       if (sort === "name") return a.name.localeCompare(b.name);
       if (sort === "-name") return b.name.localeCompare(a.name);
@@ -326,17 +356,62 @@ const Employees = () => {
                   <label className="block text-sm font-medium mb-1">
                     Department
                   </label>
-                  <input
-                    type="text"
-                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:text-white"
+                  <Combobox
                     value={newEmployee.department}
-                    onChange={(e) =>
-                      setNewEmployee({
-                        ...newEmployee,
-                        department: e.target.value,
-                      })
+                    onChange={(value) =>
+                      setNewEmployee({ ...newEmployee, department: value })
                     }
-                  />
+                  >
+                    <div className="relative">
+                      <Combobox.Input
+                        className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:text-white"
+                        placeholder="Type or select department"
+                        onChange={(e) =>
+                          setNewEmployee({
+                            ...newEmployee,
+                            department: e.target.value,
+                          })
+                        }
+                        displayValue={(value) => value}
+                      />
+                      <Combobox.Options className="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-auto">
+                        {departments
+                          .filter((dept) =>
+                            dept.name
+                              .toLowerCase()
+                              .includes(
+                                (newEmployee.department || "").toLowerCase()
+                              )
+                          )
+                          .map((dept) => (
+                            <Combobox.Option
+                              key={dept._id}
+                              value={dept.name}
+                              className={({ active }) =>
+                                `cursor-pointer px-4 py-2 ${
+                                  active
+                                    ? "bg-purple-600 text-white"
+                                    : "text-gray-900 dark:text-white"
+                                }`
+                              }
+                            >
+                              {dept.name}
+                            </Combobox.Option>
+                          ))}
+                        {!departments.some(
+                          (d) => d.name === newEmployee.department
+                        ) &&
+                          newEmployee.department && (
+                            <Combobox.Option
+                              value={newEmployee.department}
+                              className="cursor-pointer px-4 py-2 text-purple-600"
+                            >
+                              Add “{newEmployee.department}”
+                            </Combobox.Option>
+                          )}
+                      </Combobox.Options>
+                    </div>
+                  </Combobox>
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
