@@ -105,8 +105,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-      </Routes>
-      <Routes>
         <Route
           path="/employee-leave-management"
           element={
@@ -117,8 +115,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-      </Routes>
-      <Routes>
         <Route
           path="/employee-settings"
           element={
