@@ -16,12 +16,18 @@ export const applyLeave = async (req, res) => {
 
 export const getAllLeaveRequests = async (req, res) => {
   try {
+    // 🛡️ Check if the user is an admin
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, error: 'Access denied. Admins only.' });
+    }
+
     const leaves = await LeaveRequest.find().populate('employee', 'name');
     res.status(200).json({ success: true, leaves });
   } catch (err) {
     res.status(500).json({ success: false, error: 'Failed to fetch leave requests' });
   }
 };
+
 
 export const updateLeaveStatus = async (req, res) => {
   try {
