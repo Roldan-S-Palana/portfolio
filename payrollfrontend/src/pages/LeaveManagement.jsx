@@ -72,7 +72,7 @@ const LeaveManagement = () => {
           <h2 className="text-xl font-bold">Leave Requests</h2>
           <button
             onClick={exportCSV}
-            className="flex gap-2 items-center bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="flex gap-2 items-center bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
           >
             <DownloadIcon className="w-4 h-4" />
             Export CSV

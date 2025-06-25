@@ -198,7 +198,8 @@ const Employees = () => {
               placeholder="Search employees..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="flex-1 px-4 py-2 dark:bg-gray-800 dark:text-white outline-none"
+              className="flex-1 px-4 py-2 dark:bg-gray-800 dark:text-white outline-none focus:outline-none focus:ring-2 focus:ring-purple-500
+"
             />
             <select
               onChange={(e) => setSort(e.target.value)}

@@ -43,7 +43,7 @@ const EmployeeDashboard = () => {
               title: "Days Present",
               value: 20,
               icon: (
-                <FingerprintIcon className="w-5 h-5 text-blue-500 dark:text-blue-400" />
+                <FingerprintIcon className="w-5 h-5 text-purple-500 dark:text-purple-400" />
               ),
             },
             {

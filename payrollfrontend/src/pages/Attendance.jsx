@@ -62,11 +62,12 @@ const Attendance = () => {
             placeholder="Search employee..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="px-3 py-2 border rounded-lg w-64 dark:bg-gray-800 dark:text-white"
+            className="px-3 py-2 border rounded-lg w-64 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500
+"
           />
           <button
             onClick={exportCSV}
-            className="flex gap-2 items-center bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="flex gap-2 items-center bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
           >
             <DownloadIcon className="w-4 h-4" />
             Export CSV
@@ -127,7 +128,7 @@ const Attendance = () => {
                 onClick={() => setPage(i + 1)}
                 className={`px-3 py-1 rounded ${
                   page === i + 1
-                    ? "bg-blue-600 text-white"
+                    ? "bg-purple-600 text-white"
                     : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white"
                 }`}
               >

@@ -82,7 +82,7 @@ const Login = () => {
               type="email"
               placeholder="you@example.com"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 
-              focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-700"
+              focus:ring-purple-500 dark:bg-gray-800 dark:text-white dark:border-gray-700"
               onChange={(e) => {
                 setEmail(e.target.value);
                 setError(null); // clear error on typing
@@ -98,7 +98,7 @@ const Login = () => {
               type="password"
               placeholder="********"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 
-              focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-700"
+              focus:ring-purple-500 dark:bg-gray-800 dark:text-white dark:border-gray-700"
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
@@ -111,7 +111,7 @@ const Login = () => {
             </label>
             <a
               href="#"
-              className="text-blue-600 hover:underline dark:text-blue-400"
+              className="text-purple-600 hover:underline dark:text-purple-400"
             >
               Forgot password?
             </a>
@@ -120,7 +120,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors ${
+            className={`w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-colors ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
