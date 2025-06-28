@@ -25,6 +25,11 @@ const links = [
     icon: <CalendarClockIcon className="w-5 h-5" />,
   },
   {
+    to: "/employee-payroll",
+    label: "Payroll Record",
+    icon: <CalendarClockIcon className="w-5 h-5" />,
+  },
+  {
     to: "/employee-settings",
     label: "Settings",
     icon: <CogIcon className="w-5 h-5" />,

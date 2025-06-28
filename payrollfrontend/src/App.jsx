@@ -14,6 +14,7 @@ import Attendance from "./pages/Attendance.jsx";
 import EmployeeAttendance from "./pages/EmployeeAttendance.jsx";
 import EmployeeLeave from "./pages/EmployeeLeave.jsx";
 import PayrollPage from "./pages/PayrollPage";
+import EmployeePayslipPage from "./pages/EmployeePayroll.jsx";
 <Toaster />;
 function App() {
   console.log("Rendering App.jsx");
@@ -122,6 +123,16 @@ function App() {
             <ProtectedRoute>
               <RoleBasedRoute requiredRole={"employee"}>
                 <EmployeeLeave />
+              </RoleBasedRoute>
+            </ProtectedRoute>
+          }
+        />
+         <Route
+          path="/employee-payroll"
+          element={
+            <ProtectedRoute>
+              <RoleBasedRoute requiredRole={"employee"}>
+                <EmployeePayslipPage />
               </RoleBasedRoute>
             </ProtectedRoute>
           }
