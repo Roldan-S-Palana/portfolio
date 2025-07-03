@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
 import AdminLayout from "../layouts/AdminLayout.jsx";
-import DashboardSkeleton from "../components/Skeleton.jsx";
 import {
   UsersIcon,
   Building2Icon,
@@ -12,30 +11,90 @@ import {
   CheckCircle2Icon,
   XCircleIcon,
 } from "lucide-react";
+import axios from "axios";
 
 const AdminDashboard = () => {
-  //const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
-
-  //setLoading(true);
+  const [stats, setStats] = useState(null);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    if (user === null) {
-      // Don't navigate yet, wait for verification to complete
-      return;
-    }
-    if (!user) {
-      navigate("/login");
-    }
+    if (user === null) return;
+    if (!user) return navigate("/login");
+
+    const fetchStats = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:3000/api/admin-dashboard",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setStats(res.data.stats);
+      } catch (error) {
+        console.error("❌ Failed to load dashboard stats", error);
+      }
+    };
+
+    fetchStats();
   }, [user, navigate]);
 
-  if (!user)
+  if (!user || !stats) {
     return (
       <div className="p-4 text-gray-900 dark:text-gray-100">
-        Loading or unauthorized...
+        Loading dashboard...
       </div>
     );
+  }
+
+  const dashboardItems = [
+    {
+      title: "Total Employees",
+      value: stats.totalEmployees,
+      icon: <UsersIcon className="w-5 h-5 text-pink-500 dark:text-pink-400" />,
+    },
+    {
+      title: "Departments",
+      value: stats.departments,
+      icon: (
+        <Building2Icon className="w-5 h-5 text-purple-500 dark:text-purple-400" />
+      ),
+    },
+    {
+      title: "Monthly Payroll",
+      value: `₱${Number(stats.monthlyPayroll).toLocaleString()}`,
+      icon: (
+        <WalletIcon className="w-5 h-5 text-yellow-500 dark:text-yellow-400" />
+      ),
+    },
+    {
+      title: "Leave Applied",
+      value: stats.leaveApplied,
+      icon: (
+        <CalendarPlusIcon className="w-5 h-5 text-purple-500 dark:text-purple-400" />
+      ),
+    },
+    {
+      title: "Leave Pending",
+      value: stats.leavePending,
+      icon: <ClockIcon className="w-5 h-5 text-gray-500 dark:text-gray-300" />,
+    },
+    {
+      title: "Leave Approved",
+      value: stats.leaveApproved,
+      icon: (
+        <CheckCircle2Icon className="w-5 h-5 text-green-500 dark:text-green-400" />
+      ),
+    },
+    {
+      title: "Leave Rejected",
+      value: stats.leaveRejected,
+      icon: <XCircleIcon className="w-5 h-5 text-red-500 dark:text-red-400" />,
+    },
+  ];
 
   return (
     <AdminLayout>
@@ -47,90 +106,25 @@ const AdminDashboard = () => {
           Here’s your overview for the month:
         </p>
 
-        {/* {loading ? (
-          <DashboardSkeleton />
-        ) : ( */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-            {[
-              {
-                title: "Total Employees",
-                value: 42,
-                icon: (
-                  <UsersIcon className="w-5 h-5 text-pink-500 dark:text-pink-400" />
-                ),
-              },
-              {
-                title: "Departments",
-                value: 5,
-                icon: (
-                  <Building2Icon className="w-5 h-5 text-purple-500 dark:text-purple-400" />
-                ),
-              },
-              {
-                title: "Monthly Payroll",
-                value: "₱150,000",
-                icon: (
-                  <WalletIcon className="w-5 h-5 text-yellow-500 dark:text-yellow-400" />
-                ),
-              },
-              {
-                title: "Leave Applied",
-                value: 10,
-                icon: (
-                  <CalendarPlusIcon className="w-5 h-5 text-purple-500 dark:text-purple-400" />
-                ),
-              },
-              {
-                title: "Leave Pending",
-                value: 3,
-                icon: (
-                  <ClockIcon className="w-5 h-5 text-gray-500 dark:text-gray-300" />
-                ),
-              },
-              {
-                title: "Leave Approved",
-                value: 6,
-                icon: (
-                  <CheckCircle2Icon className="w-5 h-5 text-green-500 dark:text-green-400" />
-                ),
-              },
-              {
-                title: "Leave Rejected",
-                value: 1,
-                icon: (
-                  <XCircleIcon className="w-5 h-5 text-red-500 dark:text-red-400" />
-                ),
-              },
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                className="p-6 rounded-2xl shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition"
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  {item.icon}
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">
-                    {item.title}
-                  </p>
-                </div>
-                <h2 className="text-2xl font-bold mt-1 text-pink-600 dark:text-pink-400">
-                  {item.value}
-                </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+          {dashboardItems.map((item, idx) => (
+            <div
+              key={idx}
+              className="p-6 rounded-2xl shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition"
+            >
+              <div className="flex items-center gap-2 mb-1">
+                {item.icon}
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  {item.title}
+                </p>
               </div>
-            ))}
-          </div>
-        {/* )} */}
+              <h2 className="text-2xl font-bold mt-1 text-pink-600 dark:text-pink-400">
+                {item.value}
+              </h2>
+            </div>
+          ))}
+        </div>
       </div>
-
-      {/* <div className="mt-8 space-y-4">
-        {Array.from({ length: 40 }).map((_, i) => (
-          <div
-            key={i}
-            className="p-4 bg-white dark:bg-gray-800 rounded shadow text-gray-800 dark:text-white"
-          >
-            Dummy content block #{i + 1}
-          </div>
-        ))}
-      </div> */}
     </AdminLayout>
   );
 };
