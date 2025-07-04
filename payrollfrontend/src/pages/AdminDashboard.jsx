@@ -18,15 +18,21 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const token = localStorage.getItem("token");
+  const [range, setRange] = useState("this_month");
 
   useEffect(() => {
     if (user === null) return;
-    if (!user) return navigate("/login");
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
 
     const fetchStats = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:3000/api/admin-dashboard",
+          `http://localhost:3000/api/admin-dashboard?range=${range}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -40,7 +46,7 @@ const AdminDashboard = () => {
     };
 
     fetchStats();
-  }, [user, navigate]);
+  }, [user, range, navigate]);
 
   if (!user || !stats) {
     return (
@@ -64,8 +70,13 @@ const AdminDashboard = () => {
       ),
     },
     {
-      title: "Monthly Payroll",
-      value: `₱${Number(stats.monthlyPayroll).toLocaleString()}`,
+      title:
+        range === "this_month"
+          ? "Monthly Payroll"
+          : range === "last_3_months"
+          ? "Last 3 Months Payroll"
+          : "Total Payroll",
+      value: `₱${Number(stats.totalPayroll).toLocaleString()}`,
       icon: (
         <WalletIcon className="w-5 h-5 text-yellow-500 dark:text-yellow-400" />
       ),
@@ -105,6 +116,16 @@ const AdminDashboard = () => {
         <p className="mt-2 text-lg text-gray-600 dark:text-gray-300">
           Here’s your overview for the month:
         </p>
+
+        <select
+          className="mb-4 p-2 rounded-2xl shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition"
+          value={range}
+          onChange={(e) => setRange(e.target.value)}
+        >
+          <option value="this_month">This Month</option>
+          <option value="last_3_months">Last 3 Months</option>
+          <option value="all">All Time</option>
+        </select>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
           {dashboardItems.map((item, idx) => (

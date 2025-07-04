@@ -10,16 +10,40 @@ export const getAdminDashboardStats = async (req, res) => {
       return res.status(403).json({ success: false, message: "Forbidden" });
     }
 
+    const range = req.query.range || "this_month";
+
+    let payrollMatch = {};
+
+    if (range === "this_month") {
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1);
+      startOfMonth.setHours(0, 0, 0, 0);
+
+      const endOfMonth = new Date(startOfMonth);
+      endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+
+      payrollMatch.startDate = { $gte: startOfMonth, $lt: endOfMonth };
+    } else if (range === "last_3_months") {
+      const threeMonthsAgo = new Date();
+      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+      payrollMatch.startDate = { $gte: threeMonthsAgo };
+    }
+
     const totalEmployees = await User.countDocuments({ role: "employee" });
     const departments = await Department.countDocuments();
 
-    // Sum total payroll amount
     const totalPayrollAgg = await Payroll.aggregate([
-      { $group: { _id: null, total: { $sum: "$amount" } } },
+      { $match: payrollMatch },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$amount" },
+        },
+      },
     ]);
+
     const totalPayroll = totalPayrollAgg[0]?.total || 0;
 
-    // Leave status counts
     const leaveStats = await Leave.aggregate([
       { $group: { _id: "$status", count: { $sum: 1 } } },
     ]);
@@ -29,31 +53,24 @@ export const getAdminDashboardStats = async (req, res) => {
       leaveMap[item._id] = item.count;
     });
 
-    const totalLeaveApplied = leaveStats.reduce(
-      (sum, stat) => sum + stat.count,
-      0
-    );
-
     res.status(200).json({
       success: true,
       stats: {
         totalEmployees,
         departments,
         totalPayroll,
-        leaveApplied: totalLeaveApplied,
+        leaveApplied: leaveMap["Applied"] || 0,
         leavePending: leaveMap["Pending"] || 0,
         leaveApproved: leaveMap["Approved"] || 0,
         leaveRejected: leaveMap["Rejected"] || 0,
       },
     });
-
-    console.log("📊 Stats received:", res.data.stats);
-
-
   } catch (error) {
     console.error("📊 Dashboard Error:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Failed to fetch dashboard stats" });
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch dashboard stats",
+    });
   }
 };
+
